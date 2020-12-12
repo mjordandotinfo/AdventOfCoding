@@ -3,20 +3,8 @@ content = f.read()
 f.close()
 myList = content.splitlines()
 
-heading = {0: "N", 90: "E", 180: "S", 270: "W"}
-myDir = 90
 pos = [0,0]
 waypoint = [10,1]
-
-def move(d,v):
-    if d == "N":
-        pos[1] += v
-    elif d == "E":
-        pos[0] += v
-    elif d == "S":
-        pos[1] -= v
-    elif d == "W":
-        pos[0] -= v
 
 for cmd in myList:
     ltr = cmd[0]
@@ -35,32 +23,39 @@ for cmd in myList:
         pos[1] += waypoint[1] * val
     else:
         while val > 0:
-            if waypoint[0] > 0 and waypoint[1] > 0:
-                if ltr == "L":
-                    waypoint[1] *= -1
-                else:
-                    waypoint[0] *= -1
-            elif waypoint[0] < 0 and waypoint[1] > 0:
-                if ltr == "L":
-                    waypoint[1] *= -1
-                else:
-                    waypoint[0] *= -1
-            elif waypoint[0] < 0 and waypoint[1] < 0:
-                if ltr == "L":
-                    waypoint[1] *= -1
-                else:
-                    waypoint[0] *= -1
-            elif waypoint[0] > 0 and waypoint[1] < 0:
-                if ltr == "L":
-                    waypoint[1] *= -1
-                else:
-                    waypoint[0] *= -1
+            x = waypoint[0]
+            y = waypoint[1]
 
             tmp = waypoint[0]
             waypoint[0] = waypoint[1]
             waypoint[1] = tmp
 
+            if x > 0 and y > 0:
+                if ltr == "L":
+                    waypoint[0] *= -1
+                else:
+                    waypoint[1] *= -1
+            elif x < 0 and y > 0:
+                if ltr == "L":
+                    waypoint[0] *= -1
+                else:
+                    waypoint[1] *= -1
+            elif x < 0 and y < 0:
+                if ltr == "L":
+                    waypoint[0] *= -1
+                else:
+                    waypoint[1] *= -1
+            elif x > 0 and y < 0:
+                if ltr == "L":
+                    waypoint[0] *= -1
+                else:
+                    waypoint[1] *= -1
+
+            
+
             val -= 90
+    
+    print(pos[0], pos[1], waypoint[0], waypoint[1])
 
 print(pos)
 print(abs(pos[0]) + abs(pos[1]))
