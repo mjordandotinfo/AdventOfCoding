@@ -18,8 +18,8 @@ def findDupe(str1, str2):
         if not c in chars:
             chars.append(c)
     
-    for c in str2:
-        if c in chars and not c in dupes:
+    for c in chars:
+        if c in str2 and not c in dupes:
             dupes.append(c)
 
     return ''.join(dupes)
