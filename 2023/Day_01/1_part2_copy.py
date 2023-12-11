@@ -1,5 +1,5 @@
 # f = open('./2023/Day_01/test_2.txt', 'r')
-f = open('./2023/Day_01/input.txt', 'r')
+f = open('input.txt', 'r')
 lines = [line.strip('\n') for line in f]
 f.close()
 

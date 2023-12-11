@@ -1,5 +1,10 @@
-f = open('./2023/Day_01/test_2.txt', 'r')
+import os
+
+print(os.getcwd())
+
+# f = open('./2023/Day_01/test_2.txt', 'r')
 # f = open('./2023/Day_01/input.txt', 'r')
+f = open('input.txt', 'r')
 lines = [line.strip('\n') for line in f]
 f.close()
 
@@ -13,10 +18,8 @@ for line in lines:
     # for each written number, find all duplicates of it in the string
     indices = []
     for num_int, num_str in enumerate(numbers):
-        # print(f'{num_str=}')
         i = -1
         while line.find(num_str,i+1) != -1:
-            # print(f'{num_str=} - {i=} - {line.find(num_str,i+1)=}')
             i = line.find(num_str,i+1)
             indices.append((i, str(num_int)))
     
