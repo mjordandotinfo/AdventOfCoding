@@ -1,5 +1,4 @@
 import re
-import copy
 
 f = open('input.txt', 'r')
 # f = open('test.txt', 'r')
