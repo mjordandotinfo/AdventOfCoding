@@ -27,12 +27,9 @@ class Card:
         self.score = self.score_card()
         self.copies = 1
 
-total = 0
-
 # track copies for all cards
 copies = {i: 0 for i in range(0+1,len(lines)+1)}
 
-total = 0
 for i, line in enumerate(lines):
     card = Card(line) # you never need to look back for the score of a card, so make it once and get rid of it
     copies[card.card_num] += 1 # get one original copy
