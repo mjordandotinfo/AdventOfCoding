@@ -7,7 +7,6 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
-	//"strconv"
 )
 
 // I wanted a Tuple-like structure to sort by
@@ -35,11 +34,13 @@ func main() {
 	for scanner.Scan() {
 		line := scanner.Text()
 		println(line)
-		//muls := re.FindAllString(line, -1)
+
+		// Find all Dos, Don't, and Muls
 		muls := reMuls.FindAllStringIndex(line, -1)
 		dos := reDos.FindAllStringIndex(line, -1)
 		donts := reDonts.FindAllStringIndex(line, -1)
 
+		// Add them all to the queue
 		queue := []Pair{}
 		var exps [][][]int
 		exps = append(exps, muls, dos, donts)
@@ -49,24 +50,27 @@ func main() {
 			}
 		}
 
-		// sort the queue
+		// sort the queue by index
 		sort.Slice(queue, func(i, j int) bool {
 			return queue[i].start < queue[j].start
 		})
 
+		// default to counting
 		enabled := true
 		lineTotal := 0
 		for _, match := range queue {
+			// disable if the queue pulls a don't
 			if match.value == "don't()" {
 				enabled = false
 				continue
+				// re-enable if the queue pulls a do
 			} else if match.value == "do()" {
 				enabled = true
 				continue
 			}
 
 			// match.value == mul
-			//println(match.start, match.value)
+			// Do the math if a mul and enabled
 			if enabled {
 				nums := reNums.FindAllString(line[match.start:match.end], -1)
 				op1, _ := strconv.Atoi(nums[0])
@@ -78,29 +82,9 @@ func main() {
 		total += lineTotal
 
 		println(total)
-		//for i, match := range muls {
-		//	for j, val := range match {
-		//		println(i, j, val, line[match[0]:match[1]])
-		//	}
-		//}
-
-		//dontRe := regexp.MustCompile("don't\\(\\)")
-		//doRe := regexp.MustCompile("do\\(\\)")
-		//donts := dontRe.FindAllStringIndex(line, -1)
-		//dos := doRe.FindAllStringIndex(line, -1)
-
-		//println(muls)
-		//for i, mul := range muls {
-		//	println(i, mul[0], mul[1], line[mul[0]:mul[1]])
-		//	//nums := numRe.FindAllString(level, -1)
-		//	//op1, _ := strconv.Atoi(nums[0])
-		//	//op2, _ := strconv.Atoi(nums[1])
-		//	//total += op1 * op2
-		//}
 	}
 
-	//println(total)
-
+	// I don't know why I do this, but chatGPT says I should
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
