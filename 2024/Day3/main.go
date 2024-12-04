@@ -10,7 +10,7 @@ import (
 )
 
 // I wanted a Tuple-like structure to sort by
-type Pair struct {
+type Tuple struct {
 	start int
 	end   int
 	value string
@@ -41,12 +41,12 @@ func main() {
 		donts := reDonts.FindAllStringIndex(line, -1)
 
 		// Add them all to the queue
-		queue := []Pair{}
+		queue := []Tuple{}
 		var exps [][][]int
 		exps = append(exps, muls, dos, donts)
 		for _, matches := range exps {
 			for _, match := range matches {
-				queue = append(queue, Pair{match[0], match[1], line[match[0]:match[1]]})
+				queue = append(queue, Tuple{match[0], match[1], line[match[0]:match[1]]})
 			}
 		}
 
