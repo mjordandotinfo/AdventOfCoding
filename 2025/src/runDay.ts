@@ -1,43 +1,52 @@
 import { argv, exit } from "process";
+import { readLines } from "./utils";
 
-function parseDayArg(): string {
-    const raw = argv[2];
+type Mode = "real" | "test";
 
-    if (!raw) {
-        console.error("Usage: npm run day -- <dayNumber>");
+function parseDayArg(): {day: string; mode: Mode} {
+    const rawDay = argv[2];
+    const rawMode = argv[3] ?? "real";
+
+    if (!rawDay) {
+        console.error("Usage: npm run day -- <dayNumber> [real|test]");
         exit(1);
     }
 
-    const dayNum = Number(raw);
+    const dayNum = Number(rawDay);
 
     if (!Number.isInteger(dayNum) || dayNum < 1 || dayNum > 25) {
         console.error("Day must be an integer between 1 and 25.");
         exit(1);
     }
 
-    return dayNum.toString().padStart(2, "0");
+    const mode = (rawMode === "test" ? "test" : "real") as Mode;
+    const day = dayNum.toString().padStart(2, "0");
+
+    return {day, mode};
 }
 
 async function main() {
-    const day = parseDayArg();
+    const {day, mode} = parseDayArg();
     const modulePath = `./days/day${day}`;
 
     const mod = require(modulePath) as {
-        part1?: () => unknown;
-        part2?: () => unknown;
+        part1?: (lines: string[]) => unknown;
+        part2?: (lines: string[]) => unknown;
     };
 
-    console.log(`Day ${day}`);
+    const lines = readLines(day, mode);
+
+    console.log(`Day ${day} (${mode.toUpperCase()} input)`);
 
     if (typeof mod.part1 === "function") {
-        const result1 = mod.part1();
+        const result1 = mod.part1(lines);
         console.log("Part 1:", result1);
     } else {
         console.log("Part 1: (not implemented)");
     }
 
     if (typeof mod.part2 === "function") {
-        const result2 = mod.part2();
+        const result2 = mod.part2(lines);
         console.log("Part 2:", result2);
     } else {
         console.log("Part 2: (not implemented)");
