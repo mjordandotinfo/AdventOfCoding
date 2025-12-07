@@ -1,3 +1,4 @@
+
 class Point {
     x: number;
     y: number;
@@ -7,19 +8,6 @@ class Point {
         this.x = x;
         this.y = y;
         this.key = `${x},${y}`;
-    }
-
-    isAdjacent(other: Point): boolean {
-        const xmin = this.x - 1;
-        const xmax = this.x + 1;
-        const ymin = this.y - 1;
-        const ymax = this.y + 1;
-
-        if (other.x >= xmin && other.x <= xmax && other.y >= ymin && other.y <= ymax){
-            return true;
-        }
-        
-        return false;
     }
 
     getAdjacent(xUpperBound: number, yUpperBound: number) {
@@ -77,6 +65,63 @@ export function part1(lines: string[]) {
 
 }
 
-// export function part2(lines: string[]) {
+function getValidRolls(rollMap: Map<string, Set<string>>) {
+    let validRolls: string[] = [];
+    rollMap.forEach((rollSet, key) => {
+        if (rollSet.size < 4) {
+            validRolls.push(key);
+        }
+    });
 
-// }
+    return validRolls
+}
+
+export function part2(lines: string[]) {
+
+    const rollMap = new Map<string, Set<string>>();
+    
+    for (let y = 0; y < lines.length; y ++) {
+        const line = lines[y];
+        for (let x = 0; x < line.length; x++){
+            if (line[x] == '@') {
+                const currentPoint = new Point(x, y);
+                // add the point to the Map
+                if (!rollMap.has(currentPoint.key)){
+                    rollMap.set(currentPoint.key, new Set<string>);
+                }
+
+                // check for adjacent rolls in the map
+                const adjacentPoints = currentPoint.getAdjacent(line.length, lines.length);
+
+                // add each adjacent roll to the set
+                adjacentPoints.forEach((adjacentPoint) => {
+                    if (lines[adjacentPoint.y][adjacentPoint.x] == '@') {
+                        rollMap.get(currentPoint.key)?.add(adjacentPoint.key);
+                    }
+                });
+
+            }
+        }
+    }
+
+    // check for valid rolls
+    let validRolls = getValidRolls(rollMap);
+    let removedRolls = 0;
+    while (validRolls.length) {
+        validRolls.forEach((rollKey) => {
+            // remove roll from Map
+            rollMap.delete(rollKey);
+            removedRolls += 1;
+
+            // remove roll from other rolls' neihbors
+            for (const rolls of rollMap.values()){
+                rolls.delete(rollKey);
+            }
+        })
+        validRolls = getValidRolls(rollMap);
+    }
+
+
+    return removedRolls;
+
+}
