@@ -26,7 +26,35 @@ export function part1(lines: string[]) {
 }
 
 
-// export function part2(lines: string[]) {
+export function part2(lines: string[]) {
+    const { ranges, } = parseInput(lines);
+    // console.log(ranges);
 
+    const numericalRanges = ranges.map((range) => {
+        const [start, end] = range.split("-");
+        return [Number(start), Number(end)];
+    });
 
-// }
+    numericalRanges.sort((a, b) => {
+        if (a[0] !== b[0]) return a[0] - b[0];
+        return a[1] - b[1];
+    });
+
+    // console.log(numericalRanges);
+    for (let i = 0; i < numericalRanges.length - 1; i += 1) {
+        if (numericalRanges[i][1] >= numericalRanges[i+1][0]) {
+            numericalRanges[i][1] = numericalRanges[i+1][1];
+            numericalRanges.splice(i+1,1);
+            i -= 1;
+            // console.log(numericalRanges);
+        }
+    }
+
+    let numFresh = 0;
+    numericalRanges.forEach((range) => {
+        numFresh += (range[1] - range[0] + 1);
+    })
+
+    // console.log(numFresh);
+    return numFresh;
+}
